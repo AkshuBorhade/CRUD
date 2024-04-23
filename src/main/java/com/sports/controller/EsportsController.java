@@ -18,34 +18,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sports.model.Esports;
 import com.sports.repository.EsportsRepo;
+import com.sports.service.EsportsService;
 
 @RestController
 @RequestMapping("/api")
 public class EsportsController {
 		
 	@Autowired
-	EsportsRepo esportsRepo;
+	EsportsService esportsService;
 	
 	//adding players in DB
         //add new code changes here akshay 
-	@PostMapping("/sports")
+	
+	@PostMapping("/add/sports")
 	public String addNewPlayer(@RequestBody Esports esports) {
-		esportsRepo.save(esports);
+		esportsService.addplayer(esports);
 		return "player added successfully";
 	}
 	
 	//showing players
-	@GetMapping("/sports")
+	@GetMapping("/get/sports")
 	public ResponseEntity<List<Esports>> getPlayers(){
 		List<Esports> plrList = new ArrayList<>();
-		esportsRepo.findAll().forEach(plrList::add);
+		esportsService.findAll().forEach(plrList::add);
 		return new ResponseEntity<List<Esports>>(plrList,HttpStatus.OK);
 	}
 	
 	//showing players by ID
-	@GetMapping("/sports/{plrid}")
+	@GetMapping("/getbyid/sports/{plrid}")
 	public ResponseEntity<Esports> getbyId(@PathVariable long plrid ){
-		Optional<Esports> esp = esportsRepo.findById(plrid);
+		Optional<Esports> esp = esportsService.findById(plrid);
 		if(esp.isPresent()) {
 			return new ResponseEntity<Esports>(esp.get(), HttpStatus.FOUND);
 		}else {
@@ -54,16 +56,16 @@ public class EsportsController {
 	}
 	
 	//updating players
-	@PutMapping("/sports/{plrid}")
+	@PutMapping("/update/sports/{plrid}")
 	public String updatePlyerById(@PathVariable long plrid, @RequestBody Esports esports) {
-		Optional<Esports> esp = esportsRepo.findById(plrid);
+		Optional<Esports> esp = esportsService.findById(plrid);
 		if(esp.isPresent()) {
 			Esports existPLr = esp.get();
-			existPLr.setPlr_name(esports.getPlr_name());
-			existPLr.setPlr_game(esports.getPlr_game());
-			existPLr.setPlr_team(esports.getPlr_team());
-			existPLr.setPlr_age(esports.getPlr_age());
-			esportsRepo.save(existPLr);
+			existPLr.setPlrName(esports.getPlrName());
+			existPLr.setPlrGame(esports.getPlrGame());
+			existPLr.setPlrTeam(esports.getPlrTeam());
+			existPLr.setPlrAge(esports.getPlrAge());
+			esportsService.updatePlayerById(existPLr);
 			return "Updated the player at ID "+plrid;
 		}else {
 			return "Player details does not exist for ID "+plrid;
@@ -71,16 +73,16 @@ public class EsportsController {
 	}
 	
 	//deleting 1 Player from DB
-	@DeleteMapping("/sports/{plrid}")
+	@DeleteMapping("/delete/sports/{plrid}")
 	public String deletePlyerById(@PathVariable long plrid) {
-		esportsRepo.deleteById(plrid);
+		esportsService.deletePlayerById(plrid);
 		return "Player deleted Successfully at ID "+plrid;
 	}
 	
 	//deleting all players from DB
-	@DeleteMapping("/sports")
+	@DeleteMapping("/deleteall/sports")
 	public String deleteAllPlayers() {
-		esportsRepo.deleteAll();
+		esportsService.deleteAll();
 		return "All players Deleted SuccessFully"; 
 	}
 }
