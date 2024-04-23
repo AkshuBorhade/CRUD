@@ -27,6 +27,7 @@ public class EsportsController {
 	EsportsRepo esportsRepo;
 	
 	//adding players in DB
+        //add new code changes here akshay 
 	@PostMapping("/sports")
 	public String addNewPlayer(@RequestBody Esports esports) {
 		esportsRepo.save(esports);
