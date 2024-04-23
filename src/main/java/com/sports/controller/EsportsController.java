@@ -28,14 +28,14 @@ public class EsportsController {
 	
 	//adding players in DB
         //add new code changes here akshay 
-	@PostMapping("/sports")
+	@PostMapping("/add/sports")
 	public String addNewPlayer(@RequestBody Esports esports) {
 		esportsRepo.save(esports);
 		return "player added successfully";
 	}
 	
 	//showing players
-	@GetMapping("/sports")
+	@GetMapping("/update/sports")
 	public ResponseEntity<List<Esports>> getPlayers(){
 		List<Esports> plrList = new ArrayList<>();
 		esportsRepo.findAll().forEach(plrList::add);
