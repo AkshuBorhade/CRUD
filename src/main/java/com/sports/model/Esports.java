@@ -1,10 +1,12 @@
 package com.sports.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -40,6 +42,13 @@ public class Esports {
 		this.plr_team = plr_team;
 		this.plr_age = plr_age;
 	}
+	
+	@OneToOne(mappedBy = "esports",cascade = CascadeType.ALL)
+	private Stats stats;
+	
+	
+	
+	
 
 	public long getPlrid() {
 		return plrid;
@@ -80,6 +89,14 @@ public class Esports {
 	public void setPlr_age(int plr_age) {
 		this.plr_age = plr_age;
 	}
+	
+	 public Stats getStats() {
+	        return stats;
+	    }
+
+	    public void setStats(Stats stats) {
+	        this.stats = stats;
+	    }
 
 	@Override
 	public String toString() {

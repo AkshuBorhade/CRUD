@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sports.model.Esports;
+import com.sports.model.PlayerDetailsWithStats;
+import com.sports.model.Stats;
 import com.sports.repository.EsportsRepo;
+import com.sports.repository.StatsRepo;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,24 @@ public class EsportsController {
 	@Autowired
 	EsportsRepo esportsRepo;
 	
+	@Autowired
+	StatsRepo statsRepo;
+	
+	@GetMapping("/sports/{plrid}/details")
+	public ResponseEntity<?> getPlayerDetaildWithStats(@PathVariable long plrid){
+		Optional<Esports> espOptional = esportsRepo.findById(plrid);
+		if (espOptional.isPresent()) {
+			Esports esports = espOptional.get();
+			
+			Stats stats = esports.getStats();
+			return ResponseEntity.ok(new PlayerDetailsWithStats(esports, stats));
+			}else {
+				return ResponseEntity.notFound().build();
+			}
+		
+	}
+	
+ 	
 	//adding players in DB
         //add new code changes here akshay 
 	@PostMapping("/sports")
@@ -45,9 +66,9 @@ public class EsportsController {
 	//showing players by ID
 	@GetMapping("/sports/{plrid}")
 	public ResponseEntity<Esports> getbyId(@PathVariable long plrid ){
-		Optional<Esports> esp = esportsRepo.findById(plrid);
+		Optional<Esports> esp = esportsRepo.	findById(plrid);
 		if(esp.isPresent()) {
-			return new ResponseEntity<Esports>(esp.get(), HttpStatus.FOUND);
+		return new ResponseEntity<Esports>(esp.get(), HttpStatus.FOUND);
 		}else {
 			return new ResponseEntity<Esports>(HttpStatus.NOT_FOUND);
 		}
